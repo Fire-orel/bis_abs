@@ -10,6 +10,7 @@ class Customers (models.Model):
     phone_numder = models.CharField(max_length = 15,verbose_name = "Телефон")
     password_number = models.CharField(max_length = 10, verbose_name = "Номер паспорта")
     password_issue_data = models.DateField(verbose_name = "Дата получения паспорта")
+    date_of_birth = models.DateField(verbose_name = "День рождения" ,default="2000-01-01")
     # created_at = models.DateTimeField(auto_now_add = True, verbose_name = "Дата открытие счёта")
 
     def __str__(self):
