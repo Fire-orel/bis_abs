@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список клиентов</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Customer List</h1>
+        <a href="{% url 'add_customer' %}" class="btn btn-success my-4">Добавить нового клиента</a> <!-- Украшенная кнопка "Добавить нового клиента" -->
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Фамилия</th>
+                    <th>Имя</th>
+                    <th>Отчество</th>
+                    <th>Паспорт</th>
+                    <th>Телефон</th>
+                    <th>Адрес электронной почты</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in object_list %}
+                    <tr>
+                        <td>{{ customer.last_name }}</td>
+                        <td>{{ customer.first_name }}</td>
+                        <td>{{ customer.middle_name }}</td>
+                        <td>{{ customer.password_number }}</td>
+                        <td>{{ customer.phone_numder }}</td>
+                        <td>{{ customer.email }}</td>
+                        <td>
+                            <a href="" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a> <!-- Используем иконку "edit" из Font Awesome -->
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDelete{{ customer.id }}"><i class="fas fa-trash-alt"></i></a>
+                            <a href="{% url 'customer_detail' customer.id %}" class="btn btn-info btn-sm"><i class="fas fa-user"></i> Карточка клиента</a> <!-- Кнопка "Просмотреть клиента" -->
+                            <div class="modal fade" id="confirmDelete{{ customer.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="confirmDeleteLabel">Подтверждение удаления</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Вы уверены, что хотите удалить этого клиента?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                            <a href="" class="btn btn-danger">Удалить</a> <!-- Ссылка на удаление клиента -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</html>

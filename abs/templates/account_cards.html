@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Cards</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Account Cards</h1>
+        <a href="{% url 'customer_detail' account.customer.id %}" class="btn btn-primary mb-4"><i class="fas fa-arrow-left"></i> Back to Customer</a> <!-- Кнопка "Назад к клиенту" -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <strong>Account Information</strong>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Account Number:</strong> {{ account.pk }}</p>
+                        <p><strong>Account Type:</strong> {{ account.get_account_type_display }}</p>
+                        <p><strong>Currency:</strong> {{ account.currency }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                Карты выпущенные к этому счёту
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Номер карты</th>
+                            <th>Срок действие карты</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for card in cards %}
+                            <tr>
+                                <td>{{ card.card_number }}</td>
+                                <td>{{ card.expiration_date }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключаем необходимые скрипты -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
