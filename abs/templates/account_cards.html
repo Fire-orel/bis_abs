@@ -23,6 +23,13 @@
                     </div>
                 </div>
             </div>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Выпустить карту для этого счета</button>
+                    {% comment %} <a href="" class="btn btn-primary"><i class="fas fa-edit"></i> Выпустить карту для этого счета</a> <!-- Кнопка редактирования клиента --> {% endcomment %}
+                </div>
+            </form>
         </div>
 
         <div class="card">

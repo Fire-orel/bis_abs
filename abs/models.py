@@ -9,12 +9,18 @@ class Customers (models.Model):
     email = models.EmailField(verbose_name = "Адрес электронной почты")
     phone_numder = models.CharField(max_length = 15,verbose_name = "Телефон")
     password_number = models.CharField(max_length = 10, verbose_name = "Номер паспорта")
-    password_issue_data = models.DateField(verbose_name = "Дата получения паспорта")
+    password_issue_data = models.DateField(verbose_name = "Дата получения паспорта",unique = True)
     date_of_birth = models.DateField(verbose_name = "День рождения" ,default="2000-01-01")
     # created_at = models.DateTimeField(auto_now_add = True, verbose_name = "Дата открытие счёта")
 
     def __str__(self):
         return f"{self.pk} {self.last_name} {self.first_name} {self.middle_name}"
+
+    def get_customer_by_paspord(password_number):
+        try:
+            return Customers.objects.get(password_number= password_number)
+        except:
+            return False
 
 class Currencys (models.Model):
     name = models.CharField(max_length = 150, verbose_name = "Валюта", unique = True)

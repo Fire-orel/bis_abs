@@ -33,7 +33,7 @@
                         <td>{{ customer.phone_numder }}</td>
                         <td>{{ customer.email }}</td>
                         <td>
-                            <a href="" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a> <!-- Используем иконку "edit" из Font Awesome -->
+                            <a href="{% url 'edit_customer' customer.id %}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a> <!-- Используем иконку "edit" из Font Awesome -->
                             <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDelete{{ customer.id }}"><i class="fas fa-trash-alt"></i></a>
                             <a href="{% url 'customer_detail' customer.id %}" class="btn btn-info btn-sm"><i class="fas fa-user"></i> Карточка клиента</a> <!-- Кнопка "Просмотреть клиента" -->
                             <div class="modal fade" id="confirmDelete{{ customer.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
@@ -50,7 +50,8 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                                            <a href="" class="btn btn-danger">Удалить</a> <!-- Ссылка на удаление клиента -->
+                                            <a href="{% url 'delete_customer' customer.id %}" class="btn btn-danger">Удалить</a>
+                                            <!-- Ссылка на удаление клиента -->
                                         </div>
                                     </div>
                                 </div>
