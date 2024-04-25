@@ -21,6 +21,11 @@ class Customers (models.Model):
             return Customers.objects.get(password_number= password_number)
         except:
             return False
+    def get_customer_by_id(id):
+        try:
+            return Customers.objects.get(pk= id)
+        except:
+            return False
 
 class Currencys (models.Model):
     name = models.CharField(max_length = 150, verbose_name = "Валюта", unique = True)
@@ -35,7 +40,7 @@ class Account (models.Model):
     customer = models.ForeignKey(Customers, on_delete = models.CASCADE,related_name = "customer")
     account_type = models.CharField(max_length = 1, choices = [("Д", "Дебетовый"), ("К","Кредитный"), ("Н","Накопительный")], default="Д")
     currency = models.ForeignKey(Currencys, verbose_name = "Валюта",on_delete=models.CASCADE, default='')
-    status = models.CharField(max_length = 20, default = "active", verbose_name = "Статус счёта")
+    status = models.CharField(max_length = 20,choices =[("a",'active'),('d','disactive')], default = "active", verbose_name = "Статус счёта")
     opened_at = models.DateField(auto_now_add = True ,verbose_name = "Дата открытие счёта")
     closed_at = models.DateField(blank = True, null = True)
 

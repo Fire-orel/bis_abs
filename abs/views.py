@@ -4,7 +4,7 @@ from .models import Customers,Account,Card
 from django.shortcuts import redirect
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
-
+from datetime import datetime
 
 
 class IndexViews(ListView):
@@ -79,7 +79,30 @@ class AccountCardsListView(ListView):
         account_id = self.kwargs['pk']
         context['account'] = get_object_or_404(Account, pk=account_id)
         return context
-    def 
+    def post(self, request, **kwargs):
+        account_pk = request.POST.get('account_pk')
+        customer_pk = request.POST.get('customer_pk')
+        prefix = '2200'  # Префикс для карт "Мир"
+        length = 16  # Длина номера карты
+        valid_card_number = generate_valid_card_number(prefix, length)
+        current_time=datetime.now()
+        current_time=add_years(current_time,10)
+
+
+
+
+
+        card=Card(
+            card_number=valid_card_number,
+            expiration_date=current_time,
+            customer=Customers.objects.get(pk=customer_pk),
+            account=Account.objects.get(pk=account_pk)
+        )
+        card.save()
+        # response=HttpResponseRedirect(redirect_to = '')
+        return self.get(request)
+
+
 
 class EditCustomerView(UpdateView):
     model = Customers
@@ -129,4 +152,44 @@ class CustomerDeleteView(DeleteView):
     model = Customers
     template_name = 'confirm_delete_customer.html'
     success_url = reverse_lazy('customer_list')
+
+
+
+def luhn_checksum(card_number):
+    # Преобразуем номер карты в список цифр
+    digits = [int(x) for x in str(card_number)]
+    # Удваиваем каждую вторую цифру, начиная с предпоследней
+    for i in range(len(digits) - 2, -1, -2):
+        digits[i] *= 2
+        # Если результат удвоения больше 9, вычитаем 9
+        if digits[i] > 9:
+            digits[i] -= 9
+    # Суммируем все цифры
+    checksum = sum(digits)
+    # Проверяем, является ли сумма кратной 10
+    return checksum % 10 == 0
+
+def generate_valid_card_number(prefix, length):
+    # Генерируем случайные цифры для заполнения оставшихся позиций
+    import random
+    random_digits = [random.randint(0, 9) for _ in range(length - len(prefix) - 1)]
+    # Добавляем префикс к сгенерированным цифрам
+    card_number = [int(x) for x in str(prefix)] + random_digits
+    # Вычисляем контрольную сумму для валидации номера карты
+    for i in range(10):
+        card_number.append(i)
+        if luhn_checksum(''.join(map(str, card_number))):
+            return ''.join(map(str, card_number))
+        card_number.pop()
+    raise ValueError("Couldn't generate a valid card number")
+def add_years(start_date, years):
+    try:
+        return start_date.replace(year=start_date.year + years)
+    except ValueError:
+        # 👇️ Preserve calendar day (if Feb 29th doesn't exist, set to 28th)
+        return start_date.replace(year=start_date.year + years, day=28)
+
+# Пример использования:
+
+
 # Create your views here.

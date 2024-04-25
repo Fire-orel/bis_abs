@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
+    <form method="POST" action="">
+        {% csrf_token %}
     <div class="container">
         <h1 class="mt-4">Детали счета</h1>
         <a href="{% url 'customer_detail' account.customer.id %}" class="btn btn-primary mb-4"><i class="fas fa-arrow-left"></i> Назад</a> <!-- Кнопка "Назад к клиенту" -->
@@ -17,21 +19,22 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>Account Number:</strong> {{ account.pk }}</p>
+                        <p><strong>Account Number:</strong> {{ account.pk }}
+                        <input type="hidden"  name="account_pk" value ="{{account.pk}}" required>
+                        <input type="hidden"  name="customer_pk" value ="{{account.customer.id}}" required></p>
                         <p><strong>Account Type:</strong> {{ account.get_account_type_display }}</p>
                         <p><strong>Currency:</strong> {{ account.currency }}</p>
                     </div>
                 </div>
             </div>
-            <form method="POST" action="">
-                {% csrf_token %}
+
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Выпустить карту для этого счета</button>
                     {% comment %} <a href="" class="btn btn-primary"><i class="fas fa-edit"></i> Выпустить карту для этого счета</a> <!-- Кнопка редактирования клиента --> {% endcomment %}
                 </div>
-            </form>
-        </div>
 
+        </div>
+    </form>
         <div class="card">
             <div class="card-header">
                 Карты выпущенные к этому счёту
