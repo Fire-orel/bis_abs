@@ -44,6 +44,7 @@
                 <a href="{% url 'edit_customer' customer.id %}" class="btn btn-primary"><i class="fas fa-edit"></i> Редактировать карточку клиента</a> <!-- Кнопка редактирования клиента -->
 
                 <a href="{% url 'add_account' customer.pk %}" class="btn btn-primary"><i class="fas fa-edit"></i> Открыть новый счёт</a> <!-- Кнопка редактирования клиента -->
+                <a href="{% url 'spravka' %}?customer_id={{customer.id}}" class="btn btn-primary"><i class="fas fa-edit"></i> Справка о количестве счетов</a>
             </div>
 
 

@@ -224,6 +224,29 @@ class CreateContractView(View):
         response = FileResponse(document_stream, as_attachment=True, filename='открытие_счета_{}.docx'.format(customer_name))
         return response
 
+class ClientAccountsReportView(View):
+    def get(self, request):
+        # Получаем все счета клиента
+        customer_id= request.GET.get('customer_id', '')
+        client_accounts = Account.objects.filter(customer=customer_id)
+
+        # Создаем документ Word
+        document = Document()
+        document.add_heading('Список счетов клиента', level=1)
+        for account in client_accounts:
+            document.add_paragraph('Номер счета: {}'.format(account.pk))
+            document.add_paragraph('Тип счета: {}'.format(account.get_account_type_display()))
+
+            document.add_paragraph()
+
+        # Сохраняем документ в байтовый поток
+        document_stream = io.BytesIO()
+        document.save(document_stream)
+        document_stream.seek(0)
+
+        # Отправляем документ как файл в ответ на запрос
+        response = FileResponse(document_stream, as_attachment=True, filename='счета_клиента_{}.docx'.format(customer_id))
+        return response
 def luhn_checksum(card_number):
     # Преобразуем номер карты в список цифр
     digits = [int(x) for x in str(card_number)]

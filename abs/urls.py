@@ -1,6 +1,6 @@
 from django.urls import path
 
-from abs.views import IndexViews,AddCustomerView,CustomerDetailView,AccountCardsListView,EditCustomerView,CustomerDeleteView,AddAccountView,CreateContractView
+from abs.views import IndexViews,AddCustomerView,CustomerDetailView,AccountCardsListView,EditCustomerView,CustomerDeleteView,AddAccountView,CreateContractView,ClientAccountsReportView
 
 urlpatterns = [
     path('', IndexViews.as_view(), name = "customer_list"),
@@ -11,4 +11,5 @@ urlpatterns = [
     path('delete_customer/<int:pk>', CustomerDeleteView.as_view(),name='delete_customer'),
     path('add_account/<int:pk>', AddAccountView.as_view(),name='add_account'),
     path('create_contract', CreateContractView.as_view(),name='create_contract'),
+    path('spravka', ClientAccountsReportView.as_view(),name='spravka'),
 ]
