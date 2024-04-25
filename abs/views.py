@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from django.views.generic import ListView,View,DetailView,UpdateView,DeleteView
-from .models import Customers,Account,Card
+from .models import Customers,Account,Card,Currencys
 from django.shortcuts import redirect
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -63,6 +63,17 @@ class CustomerDetailView(DetailView):
         customer = self.get_object()
         context['accounts'] =Account.objects.filter(customer=customer)
         return context
+
+    def post(self, request, **kwargs):
+        account_pk = request.POST.get('account_pk')
+        account = get_object_or_404(Account, id=account_pk)
+        account.status = "disactive"
+        account.closed_at   = datetime.now()
+
+        account.save()
+        return self.get(request)
+
+
 
 class AccountCardsListView(ListView):
     model = Card
@@ -152,6 +163,14 @@ class CustomerDeleteView(DeleteView):
     model = Customers
     template_name = 'confirm_delete_customer.html'
     success_url = reverse_lazy('customer_list')
+
+class AddAccountView(ListView):
+    model = Account
+    template_name = "add_account.html"
+    def get(self, request, customer_id):
+
+        currencies = Currencys.objects.all()
+        return render(request, self.template_name, {'currencies': currencies, "customer":customer_id })
 
 
 

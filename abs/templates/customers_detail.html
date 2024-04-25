@@ -35,7 +35,10 @@
 
             <div class="card-footer">
                 <a href="{% url 'edit_customer' customer.id %}" class="btn btn-primary"><i class="fas fa-edit"></i> Редактировать карточку клиента</a> <!-- Кнопка редактирования клиента -->
+
+                <a href="{% url 'add_account'  %}" class="btn btn-primary"><i class="fas fa-edit"></i> Открыть новый счёт</a> <!-- Кнопка редактирования клиента -->
             </div>
+
 
         </div>
         <div class="card mt-4">
@@ -57,18 +60,28 @@
                     </thead>
                     <tbody>
                         {% for account in accounts %}
-                            <tr>
-                                <td>{{ account.pk }}</td>
-                                <td>{{ account.get_account_type_display}}</td>
-                                <td>{{ account.currency }}</td>
-                                <td>{{ account.opened_at |date:"d-m-Y"}}</td>
-                                <td>{{ account.status }}</td>
-                                <td>{{ account.closed_at |date:"d-m-Y"}}</td>
-                                <td>
-                                <a href="{% url 'account_cards' account.id %}" class="btn btn-info btn-sm"><i class="fas fa-credit-card"></i> Просмотр детали счёта</a>
-                                </td>
-                            </tr>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <tr>
+                                    <td>{{ account.pk }}</td>
+                                    <input type="hidden"  name="account_pk" value ="{{account.pk}}" required>
+                                    <td>{{ account.get_account_type_display}}</td>
+                                    <td>{{ account.currency }}</td>
+                                    <td>{{ account.opened_at |date:"d-m-Y"}}</td>
+                                    <td>{{ account.status }}</td>
+                                    <td>{{ account.closed_at |date:"d-m-Y"}}</td>
+                                    {% if account.status == 'active' %}
+                                    <td>
+                                    <a href="{% url 'account_cards' account.id %}" class="btn btn-info btn-sm"><i class="fas fa-credit-card"></i> Просмотр детали счёта</a>
+                                    </td>
+                                    <td>
+                                    <button type="submit" class="btn btn-danger" data-dismiss="modal">Закрыть счёт</button>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                            </form>
                         {% endfor %}
+
                     </tbody>
                 </table>
             </div>
