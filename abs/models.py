@@ -12,6 +12,7 @@ class Customers (models.Model):
     password_issue_data = models.DateField(verbose_name = "Дата получения паспорта",unique = True)
     date_of_birth = models.DateField(verbose_name = "День рождения" ,default="2000-01-01")
     # created_at = models.DateTimeField(auto_now_add = True, verbose_name = "Дата открытие счёта")
+    photo = models.ImageField(verbose_name="Фото", default="None",upload_to="upload/product")
 
     def __str__(self):
         return f"{self.pk} {self.last_name} {self.first_name} {self.middle_name}"

@@ -18,13 +18,20 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>Фамилия:</strong> {{ customer.last_name }}</p>
-                        <p><strong>Имя</strong> {{ customer.first_name }}</p>
-                        <p><strong>Email:</strong> {{ customer.email }}</p>
-                        <p><strong>Телефон:</strong> {{ customer.phone_numder }}</p>
+                        {% if object.photo %}
+                        <img src="{{ object.photo.url }}" alt="Customer Photo" style="width: 300px; height: auto;">
+                        {% endif %}
 
                     </div>
                     <div class="col-md-6">
+                        <p><strong>Фамилия:</strong> {{ customer.last_name }}</p>
+                        <p><strong>Имя</strong> {{ customer.first_name }}</p>
+                        <p><strong>Отчество</strong> {{ customer.middle_name }}</p>
+                        <p><strong>Email:</strong> {{ customer.email }}</p>
+
+
+
+                        <p><strong>Телефон:</strong> {{ customer.phone_numder }}</p>
                         <p><strong>Дата Рождения:</strong> {{ customer.date_of_birth|date:"d-m-Y" }}</p>
                         <p><strong>Паспортные данные:</strong> {{ customer.password_number }}</p>
                         <p><strong>Дата получения паспорта:</strong> {{ customer.password_issue_data|date:"d-m-Y" }}</p>
@@ -36,7 +43,7 @@
             <div class="card-footer">
                 <a href="{% url 'edit_customer' customer.id %}" class="btn btn-primary"><i class="fas fa-edit"></i> Редактировать карточку клиента</a> <!-- Кнопка редактирования клиента -->
 
-                <a href="{% url 'add_account'  %}" class="btn btn-primary"><i class="fas fa-edit"></i> Открыть новый счёт</a> <!-- Кнопка редактирования клиента -->
+                <a href="{% url 'add_account' customer.pk %}" class="btn btn-primary"><i class="fas fa-edit"></i> Открыть новый счёт</a> <!-- Кнопка редактирования клиента -->
             </div>
 
 
@@ -78,6 +85,9 @@
                                     <button type="submit" class="btn btn-danger" data-dismiss="modal">Закрыть счёт</button>
                                     </td>
                                     {% endif %}
+                                    <td>
+                                    <a href="{% url 'create_contract' %}?customer_name={{customer.last_name}}%20{{customer.first_name}}%20{{customer.middle_name}}&account_number={{account.pk}}" class="btn btn-info btn-sm"><i class="fas fa-credit-card"></i> Распечатать договор</a>
+                                    <td>
                                 </tr>
                             </form>
                         {% endfor %}

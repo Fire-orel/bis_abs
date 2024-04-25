@@ -5,6 +5,11 @@ from django.shortcuts import redirect
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
 from datetime import datetime
+from django.http import FileResponse
+from django.views.generic import View
+from docx import Document
+from datetime import datetime
+import io
 
 
 class IndexViews(ListView):
@@ -28,6 +33,7 @@ class AddCustomerView(ListView):
         address = request.POST.get('address')
         passport_number = request.POST.get('passport_number')
         password_issue_data = request.POST.get('password_issue_data')
+        photo = request.FILES.get('photo')
 
         check_passport_number=Customers.get_customer_by_paspord(passport_number)
 
@@ -41,7 +47,9 @@ class AddCustomerView(ListView):
                                phone_numder = phone,
                                password_number = passport_number,
                                password_issue_data = password_issue_data,
-                               date_of_birth=date_of_birth)
+                               date_of_birth=date_of_birth,
+                               photo=photo
+                               )
             customer.save()
             # request.session["customer"]=email
 
@@ -157,8 +165,7 @@ class EditCustomerView(UpdateView):
         # request.session["customer"]=email
 
 
-        response=HttpResponseRedirect(redirect_to = '/')
-        return response
+        return redirect(reverse_lazy('customer_detail', kwargs={'pk': self.kwargs['pk']}))
 class CustomerDeleteView(DeleteView):
     model = Customers
     template_name = 'confirm_delete_customer.html'
@@ -167,12 +174,55 @@ class CustomerDeleteView(DeleteView):
 class AddAccountView(ListView):
     model = Account
     template_name = "add_account.html"
-    def get(self, request, customer_id):
+    def get(self, request,pk):
 
         currencies = Currencys.objects.all()
-        return render(request, self.template_name, {'currencies': currencies, "customer":customer_id })
+        return render(request, self.template_name, {'currencies': currencies ,"customer":pk})
+
+    def post(self, request, **kwargs):
+        customer_pk = request.POST.get("customer_pk")
+        type_account =request.POST.get("type_account")
+        currency_id =request.POST.get("currency")
 
 
+
+        account =Account(customer=Customers.objects.get(pk=customer_pk),
+                         account_type=type_account,
+                         currency=Currencys.objects.get(pk=currency_id),
+                         opened_at=datetime.now())
+        account.save()
+        return redirect(reverse_lazy('customer_detail', kwargs={'pk': customer_pk}))
+
+class CreateContractView(View):
+    def get(self, request):
+        # Получаем данные из параметров запроса
+        customer_name = request.GET.get('customer_name', '')  # Получаем имя клиента из параметра запроса
+        account_number = request.GET.get('account_number', '')  # Получаем номер счета из параметра запроса
+        print(customer_name)
+        # Создаем документ Word
+        document = Document()
+        document.add_heading('Договор о открытии счета', level=1)
+        document.add_paragraph('Дата: ' + datetime.now().strftime('%d.%m.%Y'))
+        document.add_paragraph()
+        document.add_paragraph('Мы, банк "Название банка", именуемый в дальнейшем "Банк",')
+        document.add_paragraph('с одной стороны, и гражданин ' + customer_name + ',')
+        document.add_paragraph('действующий от своего имени, именуемый в дальнейшем "Клиент", с другой стороны,')
+        document.add_paragraph('заключили настоящий договор о нижеследующем:')
+        document.add_paragraph()
+        document.add_paragraph('1. Банк открывает Клиенту счет под номером ' + account_number + '.')
+        document.add_paragraph()
+        document.add_paragraph('Настоящий договор вступает в силу с момента его подписания и действует в течение указанного периода.')
+        document.add_paragraph()
+        document.add_paragraph('Подпись Банка: _________________     Подпись Клиента: _________________')
+
+        # Сохраняем документ в байтовый поток
+        document_stream = io.BytesIO()
+        document.save(document_stream)
+        document_stream.seek(0)
+
+        # Отправляем документ как файл в ответ на запрос
+        response = FileResponse(document_stream, as_attachment=True, filename='открытие_счета_{}.docx'.format(customer_name))
+        return response
 
 def luhn_checksum(card_number):
     # Преобразуем номер карты в список цифр
