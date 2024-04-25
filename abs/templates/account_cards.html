@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Cards</title>
+    <title>Детали счета</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-4">Account Cards</h1>
-        <a href="{% url 'customer_detail' account.customer.id %}" class="btn btn-primary mb-4"><i class="fas fa-arrow-left"></i> Back to Customer</a> <!-- Кнопка "Назад к клиенту" -->
+        <h1 class="mt-4">Детали счета</h1>
+        <a href="{% url 'customer_detail' account.customer.id %}" class="btn btn-primary mb-4"><i class="fas fa-arrow-left"></i> Назад</a> <!-- Кнопка "Назад к клиенту" -->
         <div class="card mb-4">
             <div class="card-header">
-                <strong>Account Information</strong>
+                <strong>Информация по счёту</strong>
             </div>
             <div class="card-body">
                 <div class="row">
