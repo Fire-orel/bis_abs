@@ -19,11 +19,11 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>Account Number:</strong> {{ account.pk }}
+                        <p><strong>Номер счёта:</strong> {{ account.pk }}
                         <input type="hidden"  name="account_pk" value ="{{account.pk}}" required>
                         <input type="hidden"  name="customer_pk" value ="{{account.customer.id}}" required></p>
-                        <p><strong>Account Type:</strong> {{ account.get_account_type_display }}</p>
-                        <p><strong>Currency:</strong> {{ account.currency }}</p>
+                        <p><strong>Тип счета:</strong> {{ account.get_account_type_display }}</p>
+                        <p><strong>Валюта:</strong> {{ account.currency }}</p>
                     </div>
                 </div>
             </div>
